@@ -1,122 +1,104 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// frontend/src/App.jsx
+import React, { useState } from 'react';
+import { resumeData } from './data/resumeData';
 
 function App() {
-  const [count, setCount] = useState(0)
+  // 1. STATE MANAGEMENT: Track which terminal tab is currently selected/active
+  const [activeTab, setActiveTab] = useState('identity');
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    // The main wrapper styled by our global index.css variables
+    <div className="terminal-container">
+      
+      {/* 2. TERMINAL HEADER: Replicating your clean desktop window bar[cite: 1] */}
+      <div className="terminal-header">
+        <div className="window-buttons">
+          <div className="dot dot-red"></div>
+          <div className="dot dot-yellow"></div>
+          <div className="dot dot-green"></div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        <div className="window-title">jennifer@apache-server:~</div>
+        <div></div>
+      </div>
 
-      <div className="ticks"></div>
+      <div className="terminal-body">
+        {/* 3. NAVIGATION TABS: Mapping your custom script headers dynamically[cite: 1] */}
+        <nav className="nav-tabs">
+          <button 
+            className={`tab-btn ${activeTab === 'identity' ? 'active' : ''}`}
+            onClick={() => setActiveTab('identity')}
+          >
+            01_identity.sh
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'credentials' ? 'active' : ''}`}
+            onClick={() => setActiveTab('credentials')}
+          >
+            02_credentials.cfg
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'experience' ? 'active' : ''}`}
+            onClick={() => setActiveTab('experience')}
+          >
+            03_deployment_history.log
+          </button>
+        </nav>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* 4. DYNAMIC CONTENT RENDERING: Swapping panes based on activeTab state[cite: 1] */}
+        <main className="animate-fade-in">
+          
+          {/* TAB 1: IDENTITY PROFILE[cite: 1] */}
+          {activeTab === 'identity' && (
+            <section>
+              <div className="status-badge">● Environment: Secure Sandbox</div>
+              <h1><span className="prompt">jennifer@root:~$</span> whoami</h1>
+              <p>{resumeData.identity.bio}</p>
+              <p className="accent-text">📍 Based in {resumeData.identity.location}</p>
+            </section>
+          )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          {/* TAB 2: CREDENTIALS & CERTIFICATIONS */}
+          {activeTab === 'credentials' && (
+            <section>
+              <h1><span className="prompt">jennifer@root:~$</span> cat security_credentials.json</h1>
+              <p>Verified Technical Accreditations:</p>
+              <div className="grid-layout">
+                {resumeData.credentials.map((cert) => (
+                  <div key={cert.id} className="card">
+                    <h3>{cert.name}</h3>
+                    <p>{cert.issuer} ({cert.year})</p>
+                    <span className="status-badge" style={{ borderColor: 'rgba(88,166,255,0.3)', color: 'var(--cyber-blue)' }}>
+                      {cert.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* TAB 3: DEPLOYMENT HISTORY (EXPERIENCE) */}
+          {activeTab === 'experience' && (
+            <section>
+              <h1><span className="prompt">jennifer@root:~$</span> tail -n 5 execution_history.log</h1>
+              <p>System Deployment History:</p>
+              {resumeData.experience.map((job) => (
+                <div key={job.id} className="card" style={{ marginBottom: '15px' }}>
+                  <span className="prompt">[{job.period}] {job.type}</span>
+                  <h3>{job.role} @ <span className="accent-text">{job.company}</span></h3>
+                  <ul style={{ paddingLeft: '20px', margin: '10px 0 0 0' }}>
+                    {job.bullets.map((bullet, index) => (
+                      <li key={index} style={{ marginBottom: '5px' }}>{bullet}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </section>
+          )}
+
+        </main>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
