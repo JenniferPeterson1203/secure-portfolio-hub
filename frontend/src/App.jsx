@@ -63,6 +63,13 @@ function App() {
     }
   };
 
+  // STUDY NOTE: Reset the short-term state memory array to replicate a Linux 'clear' command
+  const handleClearChat = () => {
+    setChatHistory([
+      { sender: 'ai', text: "Terminal console history cleared. Core AI layers active." }
+    ]);
+  };
+
   return (
     <div className="terminal-container">
       
@@ -114,7 +121,27 @@ function App() {
 
         {/* INTEGRATED AI ASSISTANT TERMINAL INTERFACE */}
         <section className="ai-chat-widget">
-          <h3 style={{ color: 'var(--cyber-blue)', marginBottom: '10px' }}><span className="prompt">●</span> Core AI Copilot Interface</h3>
+          
+          {/* Visual Row Header with Title and [clear_logs] Link Button */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <h3 style={{ color: 'var(--cyber-blue)', margin: 0 }}><span className="prompt">●</span> Core AI Copilot Interface</h3>
+            <button 
+              type="button" 
+              onClick={handleClearChat}
+              style={{ 
+                backgroundColor: 'transparent', 
+                border: 'none', 
+                color: 'var(--text-muted)', 
+                cursor: 'pointer', 
+                fontSize: '0.8rem',
+                textDecoration: 'underline',
+                padding: 0,
+                fontFamily: 'inherit'
+              }}
+            >
+              [clear_logs]
+            </button>
+          </div>
           
           {/* Visual Log Display */}
           <div style={{ 
@@ -132,7 +159,12 @@ function App() {
                 <span style={{ color: msg.sender === 'user' ? 'var(--cyber-blue)' : 'var(--terminal-green)', fontWeight: 'bold' }}>
                   {msg.sender === 'user' ? '↳ Guest@client:~$ ' : '⚡ Copilot_Daemon: '}
                 </span>
-                <span style={{ color: msg.sender === 'user' ? 'var(--text-main)' : 'var(--text-muted)' }}>{msg.text}</span>
+                <span style={{ 
+  color: msg.sender === 'user' ? 'var(--text-main)' : 'var(--text-muted)',
+  whiteSpace: 'pre-wrap' 
+}}>
+  {msg.text}
+</span>
               </div>
             ))}
             {isChatLoading && <div style={{ color: 'var(--cyber-blue)', fontStyle: 'italic' }}>⚡ Querying model layers...</div>}
