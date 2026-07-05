@@ -49,18 +49,24 @@ export const resumeData = {
       ]
     }
   ],
-  projects: [
+projects: [
     {
-      id: 1,
-      title: "Roots and Recipes",
-      tech: ["JavaScript", "Tailwind CSS", "SQL", "Firebase", "OpenAI API", "PostgreSQL"],
-      description: "A full-stack recipe-sharing application using voice and image inputs to maximize accessibility, utilizing Firebase Auth and OpenAI API integrations."
+      id: "pokedex",
+      title: "Jennifer's Pokédex",
+      description: "Pokémon-themed React application with custom API integration, dark mode toggle, and a responsive battle/comparison interface.",
+      tech: ["React", "Vite", "REST API", "CSS3"],
+      liveUrl: "https://react-pokedex-app-sooty.vercel.app/compare",
+      frontendRepo: "https://github.com/JenniferPeterson1203/react-pokedex-app", // Fill in with your real repo link!
+      backendRepo: "" // Leave blank if Pokédex has no separate backend repo
     },
     {
-      id: 2,
-      title: "React Pokédex Platform",
-      tech: ["React", "Vite", "REST APIs", "Tailwind CSS", "State Management"],
-      description: "A dynamic client-side application utilizing external REST APIs, state management, and responsive layouts to showcase client-side optimizations."
+      id: "roots_recipes",
+      title: "Roots & Recipes",
+      description: "A full-stack, family-centric recipe sharing network featuring robust secure session authentication and full CRUD data management.",
+      tech: ["React", "Node.js", "Express", "PostgreSQL", "Auth0"],
+      liveUrl: "", // Blank because it's not live right now
+      frontendRepo: "https://github.com/JenniferPeterson1203/Roots-and-Recipes-client",
+      backendRepo: "https://github.com/JenniferPeterson1203/Roots-and-Recipes-backend" // Fill in with your backend repo link!
     }
-  ]
+  ],
 };
