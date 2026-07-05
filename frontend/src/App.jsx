@@ -13,7 +13,8 @@ function App() {
   const [isChatLoading, setIsChatLoading] = useState(false);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/')
+    // Swap local URL for live Render production URL
+    fetch('https://secure-portfolio-backend.onrender.com/')
       .then((response) => {
         if (response.ok) return response.json();
         throw new Error("Network response was not ok.");
@@ -37,7 +38,8 @@ function App() {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/chat', {
+      // Dispatch a secure network request to your live Render FastAPI chat endpoint
+      const response = await fetch('https://secure-portfolio-backend.onrender.com/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage })
@@ -46,6 +48,11 @@ function App() {
       if (!response.ok) throw new Error("API server returned an error code.");
       
       const data = await response.json();
+      
+      // Clear the false offline warning since the server just responded!
+      setBackendStatus({ status: "online", message: "Production API Active" });
+      
+      // Append the AI's response to the visual conversation stream once
       setChatHistory(prev => [...prev, { sender: 'ai', text: data.reply }]);
     } catch (error) {
       console.error("Chat Pipeline Error:", error);
@@ -53,7 +60,7 @@ function App() {
     } finally {
       setIsChatLoading(false);
     }
-  };
+  }; // <--- Fixed the missing function closing brace!
 
   const handleClearChat = () => {
     setChatHistory([
@@ -136,7 +143,7 @@ function App() {
             </section> 
           )}
 
-      {activeTab === 'projects' && (
+          {activeTab === 'projects' && (
             <section>
               <h1><span className="prompt">jpeterson@root:~$</span> curl -s api.github.com/users/jennifer/repos</h1>
               <p>Featured Software Engineering Implementations:</p>
