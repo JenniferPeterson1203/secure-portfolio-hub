@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // Swap local URL for live Render production URL
-    fetch(`${API_BASE_URL}/`)
+    fetch('https://secure-portfolio-backend.onrender.com/')
       .then((response) => {
         if (response.ok) return response.json();
         throw new Error("Network response was not ok.");
@@ -45,8 +45,10 @@ function App() {
 
     try {
       // Dispatch a secure network request to your live Render FastAPI chat endpoint
-      const response = await fetch('https://secure-portfolio-backend.onrender.com/api/chat', {
+      // const response = await fetch(`${API_BASE_URL}/api/chat`,{
+      // Hardcode the secure production endpoint to force bypass the mixed content block
       // const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch('https://secure-portfolio-backend.onrender.com/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage })
