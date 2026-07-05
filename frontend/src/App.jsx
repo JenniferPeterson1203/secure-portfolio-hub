@@ -45,7 +45,7 @@ function App() {
 
     try {
       // Dispatch a secure network request to your live Render FastAPI chat endpoint
-      const response = await fetch(`${API_BASE_URL}/api/chat`,{
+      const response = await fetch('https://secure-portfolio-backend.onrender.com/api/chat', {
       // const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
