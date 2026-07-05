@@ -1,4 +1,3 @@
-// frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { resumeData } from './data/resumeData';
 
@@ -7,9 +6,6 @@ function App() {
   const [backendStatus, setBackendStatus] = useState({ status: "offline", message: "Connecting..." });
 
   // STUDY NOTE: Set up state arrays to handle my chat interaction loop.
-  // 'chatInput' holds the message I am currently typing in the input box.
-  // 'chatHistory' keeps an array of all past questions and responses in this session.
-  // 'isChatLoading' blocks the button while the AI server is thinking so users can't spam requests.
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState([
     { sender: 'ai', text: "Systems online. Ask me anything about Jennifer's qualifications, projects, or background." }
@@ -31,18 +27,16 @@ function App() {
 
   // STUDY NOTE: Create the event handler to dispatch my prompt to the Python API
   const handleSendMessage = async (e) => {
-    e.preventDefault(); // Stop the page from reloading on form submit
+    e.preventDefault();
     if (!chatInput.trim() || isChatLoading) return;
 
     const userMessage = chatInput.trim();
-    setChatInput(''); // Clear out the input bar immediately for a smooth user experience
+    setChatInput('');
     
-    // Add my message to the visual screen log array
     setChatHistory(prev => [...prev, { sender: 'user', text: userMessage }]);
     setIsChatLoading(true);
 
     try {
-      // Dispatch a secure network request to my local FastAPI chat endpoint
       const response = await fetch('http://127.0.0.1:8000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -52,18 +46,15 @@ function App() {
       if (!response.ok) throw new Error("API server returned an error code.");
       
       const data = await response.json();
-
-      // Append the AI's response to the visual conversation stream
       setChatHistory(prev => [...prev, { sender: 'ai', text: data.reply }]);
     } catch (error) {
       console.error("Chat Pipeline Error:", error);
       setChatHistory(prev => [...prev, { sender: 'ai', text: "SYSTEM ERROR: Failed to process text sequence from backend core." }]);
     } finally {
-      setIsChatLoading(false); // Release the input bar lock
+      setIsChatLoading(false);
     }
   };
 
-  // STUDY NOTE: Reset the short-term state memory array to replicate a Linux 'clear' command
   const handleClearChat = () => {
     setChatHistory([
       { sender: 'ai', text: "Terminal console history cleared. Core AI layers active." }
@@ -111,18 +102,132 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'credentials' && ( <section><h1><span className="prompt">jpeterson@root:~$</span> cat security_credentials.json</h1><p>Verified Technical Accreditations & Training:</p><div className="grid-layout">{resumeData.credentials.map((cert) => (<div key={cert.id} className="card"><h3>{cert.name}</h3><p>{cert.issuer} ({cert.year})</p><span className="status-badge" style={{ borderColor: 'rgba(88,166,255,0.3)', color: 'var(--cyber-blue)' }}>{cert.status}</span></div>))}</div></section> )}
-          {activeTab === 'experience' && ( <section><h1><span className="prompt">jpeterson@root:~$</span> tail -n 5 execution_history.log</h1><p>System Deployment History:</p>{resumeData.experience.map((job) => (<div key={job.id} className="card" style={{ marginBottom: '15px' }}><span className="prompt">[{job.period}] {job.type}</span><h3>{job.role} @ <span className="accent-text">{job.company}</span></h3><ul style={{ paddingLeft: '20px', margin: '10px 0 0 0' }}>{job.bullets.map((bullet, index) => (<li key={index} style={{ marginBottom: '5px' }}>{bullet}</li>))}</ul></div>))}</section> )}
-          {activeTab === 'projects' && ( <section><h1><span className="prompt">jpeterson@root:~$</span> curl -s api.github.com/users/jennifer/repos</h1><p>Featured Software Engineering Implementations:</p><div className="grid-layout">{resumeData.projects.map((project) => (<div key={project.id} className="card"><h3>{project.title}</h3><p>{project.description}</p><div style={{ marginTop: '10px', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>{project.tech.map((t, idx) => (<span key={idx} style={{ fontSize: '0.75rem', border: '1px solid var(--border-color)', padding: '2px 6px', borderRadius: '3px', color: 'var(--text-muted)' }}>{t}</span>))}</div></div>))}</div></section> )}
-          {activeTab === 'infrastructure' && ( <section><h1><span className="prompt">jpeterson@root:~$</span> netstat -an | grep listen</h1><p>Demonstrated Systems Administration & Network Support Proficiency:</p><table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '15px', fontSize: '0.9rem' }}><thead><tr style={{ borderBottom: '1px solid var(--border-color)', textAlign: 'left' }}><th style={{ padding: '10px', color: 'var(--cyber-blue)' }}>Subsystem Parameter</th><th style={{ padding: '10px', color: 'var(--cyber-blue)' }}>Demonstrated Competency / Lab Environment</th></tr></thead><tbody><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}><td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Operating Systems</td><td style={{ padding: '10px' }}>Linux Environment (Command Line Navigation, Permissions Audit)</td></tr><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}><td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Web Infrastructure</td><td style={{ padding: '10px' }}>Apache HTTP Server Local Deployment & Configuration</td></tr><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}><td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Networking Protocols</td><td style={{ padding: '10px' }}>Analyzing traffic sessions via HTTP (80), SSH/SFTP (22), DNS (53)</td></tr><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}><td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Diagnostics Tools</td><td style={{ padding: '10px' }}>Packet capturing & Network troubleshooting using Wireshark</td></tr></tbody></table></section> )}
+          {activeTab === 'credentials' && ( 
+            <section>
+              <h1><span className="prompt">jpeterson@root:~$</span> cat security_credentials.json</h1>
+              <p>Verified Technical Accreditations & Training:</p>
+              <div className="grid-layout">
+                {resumeData.credentials.map((cert) => (
+                  <div key={cert.id} className="card">
+                    <h3>{cert.name}</h3>
+                    <p>{cert.issuer} ({cert.year})</p>
+                    <span className="status-badge" style={{ borderColor: 'rgba(88,166,255,0.3)', color: 'var(--cyber-blue)' }}>{cert.status}</span>
+                  </div>
+                ))}
+              </div>
+            </section> 
+          )}
+
+          {activeTab === 'experience' && ( 
+            <section>
+              <h1><span className="prompt">jpeterson@root:~$</span> tail -n 5 execution_history.log</h1>
+              <p>System Deployment History:</p>
+              {resumeData.experience.map((job) => (
+                <div key={job.id} className="card" style={{ marginBottom: '15px' }}>
+                  <span className="prompt">[{job.period}] {job.type}</span>
+                  <h3>{job.role} @ <span className="accent-text">{job.company}</span></h3>
+                  <ul style={{ paddingLeft: '20px', margin: '10px 0 0 0' }}>
+                    {job.bullets.map((bullet, index) => (
+                      <li key={index} style={{ marginBottom: '5px' }}>{bullet}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </section> 
+          )}
+
+      {activeTab === 'projects' && (
+            <section>
+              <h1><span className="prompt">jpeterson@root:~$</span> curl -s api.github.com/users/jennifer/repos</h1>
+              <p>Featured Software Engineering Implementations:</p>
+              <div className="grid-layout">
+                {resumeData.projects.map((project) => (
+                  <div 
+                    key={project.id}
+                    className="card" 
+                    style={{ 
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <div>
+                      <h3>{project.title}</h3>
+                      <p>{project.description}</p>
+                      
+                      {/* Interactive Link Hub Area */}
+                      <div style={{ marginTop: '15px', display: 'flex', gap: '12px', fontSize: '0.85rem' }}>
+                        {project.liveUrl && (
+                          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--cyber-blue)', textDecoration: 'underline' }}>
+                            [live_site 🔗]
+                          </a>
+                        )}
+                        {/* If it has BOTH repos, label this one frontend. Otherwise, just call it source_code */}
+                        {project.frontendRepo && (
+                          <a href={project.frontendRepo} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--terminal-green)', textDecoration: 'underline' }}>
+                            {project.backendRepo ? '[frontend_src 📁]' : '[source_code 📁]'}
+                          </a>
+                        )}
+                        {project.backendRepo && (
+                          <a href={project.backendRepo} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--terminal-green)', textDecoration: 'underline' }}>
+                            [backend_src 📁]
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: '15px', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                      {project.tech.map((t, idx) => (
+                        <span key={idx} style={{ fontSize: '0.75rem', border: '1px solid var(--border-color)', padding: '2px 6px', borderRadius: '3px', color: 'var(--text-muted)' }}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'infrastructure' && ( 
+            <section>
+              <h1><span className="prompt">jpeterson@root:~$</span> netstat -an | grep listen</h1>
+              <p>Demonstrated Systems Administration & Network Support Proficiency:</p>
+              <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '15px', fontSize: '0.9rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border-color)', textAlign: 'left' }}>
+                    <th style={{ padding: '10px', color: 'var(--cyber-blue)' }}>Subsystem Parameter</th>
+                    <th style={{ padding: '10px', color: 'var(--cyber-blue)' }}>Demonstrated Competency / Lab Environment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Operating Systems</td>
+                    <td style={{ padding: '10px' }}>Linux Environment (Command Line Navigation, Permissions Audit)</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Web Infrastructure</td>
+                    <td style={{ padding: '10px' }}>Apache HTTP Server Local Deployment & Configuration</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Networking Protocols</td>
+                    <td style={{ padding: '10px' }}>Analyzing traffic sessions via HTTP (80), SSH/SFTP (22), DNS (53)</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '10px', color: 'var(--terminal-green)' }}>Diagnostics Tools</td>
+                    <td style={{ padding: '10px' }}>Packet capturing & Network troubleshooting using Wireshark</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section> 
+          )}
         </main>
 
         <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '25px 0' }} />
 
         {/* INTEGRATED AI ASSISTANT TERMINAL INTERFACE */}
         <section className="ai-chat-widget">
-          
-          {/* Visual Row Header with Title and [clear_logs] Link Button */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <h3 style={{ color: 'var(--cyber-blue)', margin: 0 }}><span className="prompt">●</span> Core AI Copilot Interface</h3>
             <button 
@@ -143,7 +248,6 @@ function App() {
             </button>
           </div>
           
-          {/* Visual Log Display */}
           <div style={{ 
             backgroundColor: 'rgba(0,0,0,0.2)', 
             border: '1px solid var(--border-color)', 
@@ -160,17 +264,16 @@ function App() {
                   {msg.sender === 'user' ? '↳ Guest@client:~$ ' : '⚡ Copilot_Daemon: '}
                 </span>
                 <span style={{ 
-  color: msg.sender === 'user' ? 'var(--text-main)' : 'var(--text-muted)',
-  whiteSpace: 'pre-wrap' 
-}}>
-  {msg.text}
-</span>
+                  color: msg.sender === 'user' ? 'var(--text-main)' : 'var(--text-muted)',
+                  whiteSpace: 'pre-wrap' 
+                }}>
+                  {msg.text}
+                </span>
               </div>
             ))}
             {isChatLoading && <div style={{ color: 'var(--cyber-blue)', fontStyle: 'italic' }}>⚡ Querying model layers...</div>}
           </div>
 
-          {/* Prompt Entry Box */}
           <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: '10px' }}>
             <input 
               type="text" 
