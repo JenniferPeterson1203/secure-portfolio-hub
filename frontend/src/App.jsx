@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { resumeData } from './data/resumeData';
 
+// Automatically choose the correct backend API target location
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000'
+  : 'https://secure-portfolio-backend.onrender.com';
+
 function App() {
   const [activeTab, setActiveTab] = useState('identity');
   const [backendStatus, setBackendStatus] = useState({ status: "offline", message: "Connecting..." });
+  const [requestMetrics, setRequestMetrics] = useState({ current: 0, max: 5 });
 
   // STUDY NOTE: Set up state arrays to handle my chat interaction loop.
   const [chatInput, setChatInput] = useState('');
@@ -14,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // Swap local URL for live Render production URL
-    fetch('https://secure-portfolio-backend.onrender.com/')
+    fetch(`${API_BASE_URL}/`)
       .then((response) => {
         if (response.ok) return response.json();
         throw new Error("Network response was not ok.");
@@ -39,28 +45,61 @@ function App() {
 
     try {
       // Dispatch a secure network request to your live Render FastAPI chat endpoint
-      const response = await fetch('https://secure-portfolio-backend.onrender.com/api/chat', {
+      const response = await fetch(`${API_BASE_URL}/api/chat`,{
+      // const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage })
       });
 
-      if (!response.ok) throw new Error("API server returned an error code.");
+ 
+      // IF WE HIT YOUR CUSTOM INFRASTRUCTURE RATE LIMIT WALL
+      if (response.status === 429) {
+        setRequestMetrics({ current: 5, max: 5 }); // Lock to max safely
+        setBackendStatus({ status: "offline", message: "Rate Limit Triggered" });
+        setChatHistory(prev => [...prev, { 
+          sender: 'ai', 
+          text: "⚠️ SECURITY PROTOCOL: Local request threshold reached (5/5). Terminal console execution suspended for 60 seconds." 
+        }]);
+        return;
+      }
+
+      // Read the data body directly
+       const data = await response.json();
+
+   // IF GOOGLE'S THIRD-PARTY API IS EXHAUSTED
+if (response.status === 503 || data.status === "upstream_error") {
+        setRequestMetrics({ 
+          current: data.current_use !== undefined ? data.current_use : 0, 
+          max: data.max_limit || 5 
+        });
+        setBackendStatus({ status: "online", message: "AI Core Exhausted" });
+        setChatHistory(prev => [...prev, { sender: 'ai', text: data.reply }]);
+        return;
+      }
+
+      if (!response.ok) throw new Error("API server returned an unstable error code.");
+
+     
       
-      const data = await response.json();
       
+      // SUCCESSFUL SEQUENCE PROCESSING
+      setRequestMetrics({ 
+        current: data.current_use !== undefined ? data.current_use : 0, 
+        max: data.max_limit || 5 
+      });
       // Clear the false offline warning since the server just responded!
-      setBackendStatus({ status: "online", message: "Production API Active" });
-      
+      setBackendStatus({ status: "online", message: "Production API Active" });  
       // Append the AI's response to the visual conversation stream once
       setChatHistory(prev => [...prev, { sender: 'ai', text: data.reply }]);
     } catch (error) {
       console.error("Chat Pipeline Error:", error);
-      setChatHistory(prev => [...prev, { sender: 'ai', text: "SYSTEM ERROR: Failed to process text sequence from backend core." }]);
+      setRequestMetrics(prev => ({ ...prev }));
+      setChatHistory(prev => [...prev, { sender: 'ai', text: "SYSTEM ERROR: Failed to process text sequence from backend core. Connection timed out." }]);
     } finally {
       setIsChatLoading(false);
     }
-  }; // <--- Fixed the missing function closing brace!
+  }; 
 
   const handleClearChat = () => {
     setChatHistory([
@@ -237,22 +276,38 @@ function App() {
         <section className="ai-chat-widget">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <h3 style={{ color: 'var(--cyber-blue)', margin: 0 }}><span className="prompt">●</span> Core AI Copilot Interface</h3>
-            <button 
-              type="button" 
-              onClick={handleClearChat}
-              style={{ 
-                backgroundColor: 'transparent', 
-                border: 'none', 
-                color: 'var(--text-muted)', 
-                cursor: 'pointer', 
-                fontSize: '0.8rem',
-                textDecoration: 'underline',
-                padding: 0,
-                fontFamily: 'inherit'
-              }}
-            >
-              [clear_logs]
-            </button>
+
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+              {/* DYNAMIC RETRO TERMINAL RATIO METRIC TRACKER */}
+              <span style={{ 
+                fontSize: '0.8rem', 
+                fontFamily: 'monospace',
+                color: requestMetrics.current >= 5 ? '#ff5f56' : requestMetrics.current >= 4 ? '#ffbd2e' : 'var(--terminal-green)',
+                border: '1px solid currentColor',
+                padding: '2px 6px',
+                borderRadius: '3px',
+                backgroundColor: 'rgba(0,0,0,0.3)'
+              }}>
+                [Console Load: {requestMetrics.current}/{requestMetrics.max}]
+              </span>
+
+              <button 
+                type="button" 
+                onClick={handleClearChat}
+                style={{ 
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  color: 'var(--text-muted)', 
+                  cursor: 'pointer', 
+                  fontSize: '0.8rem',
+                  textDecoration: 'underline',
+                  padding: 0,
+                  fontFamily: 'inherit'
+                }}
+              >
+                [clear_logs]
+              </button>
+            </div>
           </div>
           
           <div style={{ 
