@@ -10,9 +10,12 @@ from app.rate_limiter import rate_limiter
 app = FastAPI(title="Secure Portfolio API")
 
 # Configure trusted origins so my browser doesn't throw a CORS block error
+# Configure trusted origins to allow both local development and live production traffic
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://jennifer-peterson-dev.vercel.app",
+    "https://jennifer-peterson-1203-jennifer-peterson-dev.vercel.app"
 ]
 
 app.add_middleware(
