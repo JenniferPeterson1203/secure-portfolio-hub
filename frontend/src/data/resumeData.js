@@ -50,23 +50,46 @@ export const resumeData = {
     }
   ],
 projects: [
-    {
-      id: "pokedex",
-      title: "Jennifer's Pokédex",
-      description: "Pokémon-themed React application with custom API integration, dark mode toggle, and a responsive battle/comparison interface.",
-      tech: ["React", "Vite", "REST API", "CSS3"],
-      liveUrl: "https://react-pokedex-app-sooty.vercel.app/compare",
-      frontendRepo: "https://github.com/JenniferPeterson1203/react-pokedex-app", // Fill in with your real repo link!
-      backendRepo: "" // Leave blank if Pokédex has no separate backend repo
-    },
-    {
-      id: "roots_recipes",
-      title: "Roots & Recipes",
-      description: "A full-stack, family-centric recipe sharing network featuring robust secure session authentication and full CRUD data management.",
-      tech: ["React", "Node.js", "Express", "PostgreSQL", "Auth0"],
-      liveUrl: "", // Blank because it's not live right now
-      frontendRepo: "https://github.com/JenniferPeterson1203/Roots-and-Recipes-client",
-      backendRepo: "https://github.com/JenniferPeterson1203/Roots-and-Recipes-backend" // Fill in with your backend repo link!
-    }
-  ],
+  {
+    id: 'pokedex',
+    title: "Jennifer's Pokédex",
+    description: "🚧 [WORK IN PROGRESS] Pokémon-themed React application with custom API integration, dark mode toggle, and a responsive battle/comparison interface.",
+    securitySpecs: [
+      "Client-side Input Sanitization: Strict query formatting on PokéAPI fetch parameters to prevent unexpected payload injection.",
+      "State Security: Encapsulated dark mode preferences and component-level state without local storage data leakage.",
+      "Upstream Protection: Debounced search interactions to prevent excessive client API hammering and limit-exceeded errors."
+    ],
+    tech: ["React", "Vite", "REST API", "CSS3"],
+    liveUrl: "https://example.com",
+    frontendRepo: "https://github.com/JenniferPeterson1203/pokedex"
+  },
+  {
+    id: 'roots-and-recipes',
+    title: "Roots & Recipes",
+    description: "🚧 [ACTIVE DEVELOPMENT] A full-stack, family-centric recipe sharing network featuring robust secure session authentication and full CRUD data management.",
+    securitySpecs: [
+      "Session Authentication: Integrated Auth0 OAuth 2.0 / OIDC flows for secure user login and token management.",
+      "Data Access Controls: Backend authorization checks validating session tokens before allowing CRUD operations on recipe records.",
+      "Database Integrity: Parameterized PostgreSQL queries preventing SQL injection vulnerabilities.",
+      "Restful API Security: Express middleware validating request bodies and enforcing CORS restrictions."
+    ],
+    tech: ["React", "Node.js", "Express", "PostgreSQL", "Auth0"],
+    frontendRepo: "https://github.com/JenniferPeterson1203/roots-and-recipes-frontend",
+    backendRepo: "https://github.com/JenniferPeterson1203/roots-and-recipes-backend"
+  },
+  {
+    id: 'audit-tool',
+    title: "Secrets & Data-Handling Security Audit Tool",
+    description: "⚡ [CURRENTLY BUILDING @ MENTOR ME COLLECTIVE] Standalone Python CLI tool designed to detect credential leaks using regex pattern matching and an NVIDIA NIM explanation layer.",
+    securitySpecs: [
+      "Internship Context: Designed and developed during Software Security Engineering Internship at Mentor Me Collective (MMC).",
+      "Detection Vector: Python CLI Regex pattern engine scanning for exposed API keys, secret tokens, and high-entropy strings.",
+      "AI Explanation Layer: Integrated NVIDIA NIM inference layer to explain security policy violations in real-time.",
+      "Data Handling: In-memory metadata redaction ensuring raw sensitive values never persist to disk or logs.",
+      "Branch Safeguards: Integrated pre-commit hooks to audit repository changes before staging commits."
+    ],
+    tech: ["Python", "Regex", "NVIDIA NIM", "Git Hooks", "CLI"],
+    frontendRepo: "https://github.com/JenniferPeterson1203/secrets-audit-tool"
+  }
+]
 };

@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import { resumeData } from '../../data/resumeData';
+import ProjectModal from '../ProjectModal';
 
 function ProjectsTab() {
+  const [selectedProject, setSelectedProject] = useState(null);
+
   return (
     <section>
       <h1><span className="prompt">jpeterson@root:~$</span> curl -s api.github.com/users/jennifer/repos</h1>
       <p>Featured Software Engineering Implementations:</p>
+      
       <div className="grid-layout">
         {resumeData.projects.map((project) => (
           <div 
@@ -21,7 +26,24 @@ function ProjectsTab() {
               <h3>{project.title}</h3>
               <p>{project.description}</p>
               
-              <div style={{ marginTop: '15px', display: 'flex', gap: '12px', fontSize: '0.85rem' }}>
+              <div style={{ marginTop: '15px', display: 'flex', gap: '12px', fontSize: '0.85rem', flexWrap: 'wrap' }}>
+                {/* SYSTEM SPECS MODAL TRIGGER */}
+                <button 
+                  onClick={() => setSelectedProject(project)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: 'var(--terminal-green)',
+                    cursor: 'pointer',
+                    padding: 0,
+                    textDecoration: 'underline',
+                    fontFamily: 'inherit',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  [system_specs 📋]
+                </button>
+
                 {project.liveUrl && (
                   <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--cyber-blue)', textDecoration: 'underline' }}>
                     [live_site 🔗]
@@ -30,11 +52,6 @@ function ProjectsTab() {
                 {project.frontendRepo && (
                   <a href={project.frontendRepo} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--terminal-green)', textDecoration: 'underline' }}>
                     {project.backendRepo ? '[frontend_src 📁]' : '[source_code 📁]'}
-                  </a>
-                )}
-                {project.backendRepo && (
-                  <a href={project.backendRepo} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--terminal-green)', textDecoration: 'underline' }}>
-                    [backend_src 📁]
                   </a>
                 )}
               </div>
@@ -50,6 +67,9 @@ function ProjectsTab() {
           </div>
         ))}
       </div>
+
+      {/* RENDER MODAL WHEN A PROJECT IS SELECTED */}
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
     </section>
   );
 }
