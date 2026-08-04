@@ -152,8 +152,29 @@ function App() {
       style={{ width: '22px', height: '22px', borderRadius: '4px', marginLeft: '6px' }} 
     />
   </div>
+  
   <div className="window-title">jpeterson@root:~</div>
-  <div style={{ fontSize: '0.7rem', color: 'var(--terminal-green)', fontFamily: 'monospace' }}>● AUTH_ACTIVE</div>
+
+  {/* SOCIAL LINKS IN HEADER */}
+  <div style={{ display: 'flex', gap: '15px', alignItems: 'center', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+    <a 
+      href="https://github.com/JenniferPeterson1203" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      style={{ color: 'var(--cyber-blue)', textDecoration: 'none' }}
+    >
+      [github ↗]
+    </a>
+    <a 
+      href="https://www.linkedin.com/in/jennifer--peterson/" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      style={{ color: 'var(--cyber-blue)', textDecoration: 'none' }}
+    >
+      [linkedin ↗]
+    </a>
+    <span style={{ color: 'var(--terminal-green)' }}>● AUTH_ACTIVE</span>
+  </div>
 </div>
 
         <div className="terminal-body">
