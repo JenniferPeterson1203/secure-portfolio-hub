@@ -1,0 +1,53 @@
+/* Core Design Tokens */
+:root {
+  --bg-color: #0a0e14;
+  --panel-bg: #161b22;
+  --border-color: #21262d;
+  --terminal-green: #27c93f;
+  --cyber-blue: #58a6ff;
+  --text-main: #c9d1d9;
+  --text-muted: #8b949e;
+  --glow-green: rgba(39, 201, 63, 0.15);
+  --glow-blue: rgba(88, 166, 255, 0.2);
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.prompt {
+  color: var(--terminal-green);
+}
+
+.prompt::after {
+  content: "█";
+  margin-left: 4px;
+  color: var(--terminal-green);
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.accent-text {
+  color: var(--cyber-blue);
+}
