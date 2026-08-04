@@ -1,4 +1,6 @@
 # backend/app/main.py
+from dotenv import load_dotenv
+load_dotenv()  # Reads the .env file locally
 import os
 from fastapi import FastAPI, HTTPException, Request, Depends, status
 from fastapi.middleware.cors import CORSMiddleware

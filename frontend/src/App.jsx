@@ -17,8 +17,11 @@ function App() {
   // STUDY NOTE: Set up state arrays to handle my chat interaction loop.
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState([
-    { sender: 'ai', text: "Systems online. Ask me anything about Jennifer's qualifications, projects, or background." }
-  ]);
+  { 
+    sender: 'ai', 
+    text: "⚡ Copilot Daemon v2.5 🚧[UNDER CONSTRUCTION / TESTING MODE]🚧\nSystems active. AI model layers are currently being optimized for live recruitment queries. Ask me anything about Jennifer's background!" 
+  }
+]);
   const [isChatLoading, setIsChatLoading] = useState(false);
 
   useEffect(() => {
